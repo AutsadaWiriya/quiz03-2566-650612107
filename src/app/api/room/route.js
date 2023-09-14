@@ -5,42 +5,55 @@ import { NextResponse } from "next/server";
 
 export const GET = async () => {
   readDB();
+  const roomList = [];
+  for (const enroll of DB.rooms) {
+    roomList.push(enroll);
+  }
   return NextResponse.json({
     ok: true,
-    //rooms:
-    //totalRooms:
+    rooms: roomList,
+    totalRooms: roomList.length
   });
 };
 
 export const POST = async (request) => {
   const payload = checkToken();
-
-  // return NextResponse.json(
-  //   {
-  //     ok: false,
-  //     message: "Invalid token",
-  //   },
-  //   { status: 401 }
-  // );
+  if( payload == null ){
+    return NextResponse.json(
+      {
+        ok: false,
+        message: "Invalid token",
+      },
+      { status: 401 }
+    );
+  }
 
   readDB();
-
-  // return NextResponse.json(
-  //   {
-  //     ok: false,
-  //     message: `Room ${"replace this with room name"} already exists`,
-  //   },
-  //   { status: 400 }
-  // );
-
+  const body = await request.json();
+  const { roomName } = body;
+  const roomNameList = DB.rooms.find( std => std.roomName === body.roomName );
+  if( roomNameList ){
+    return NextResponse.json(
+      {
+        ok: false,
+        message: `Room ${"replace this with room name"} already exists`,
+      },
+      { status: 400 }
+    );
+  }
   const roomId = nanoid();
 
-  //call writeDB after modifying Database
+  DB.rooms.push(
+    {
+      roomId: roomId,
+      roomName: roomName
+    }
+  )
   writeDB();
 
   return NextResponse.json({
     ok: true,
-    //roomId,
+    roomId,
     message: `Room ${"replace this with room name"} has been created`,
   });
 };

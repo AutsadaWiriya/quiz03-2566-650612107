@@ -33,6 +33,7 @@ const originalDB = {
   users: [
     { username: "user1", password: "1234", role: "ADMIN" },
     { username: "user2", password: "5678", role: "SUPER_ADMIN" },
+    { username: "user3", password: "1234", role: "USER" },
   ],
 };
 
