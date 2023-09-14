@@ -67,7 +67,6 @@ export const POST = async (request) => {
 
 export const DELETE = async (request) => {
   const payload = checkToken();
-  role = payload.role; 
   if( payload == null ){
     return NextResponse.json(
       {
